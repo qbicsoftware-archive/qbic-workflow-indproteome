@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 import sys
-sys.path.append('/home/mohr/projects/Fred2')
+sys.path.append('/lustre_cfc/qbic/chris/Fred2')
 
 import IO
 from IO.MartsAdapter import MartsAdapter
@@ -86,8 +86,7 @@ else:
                 soon_transcripts.append([var for var in vl+vl_normal if var.gene == g and var.coding and 'variant_details' in var.metadata and 'nonsynonymous SNV' in var.metadata['variant_details']])
 
 soon_transcripts = filter(None,soon_transcripts)
-refseq_db = RefSeqAdapter('/home/walzer/immuno-tools/dbs/RefSeq_human.protein.faa', 66, '/home/walzer/immuno-tools/dbs/RefSeq_human.rna.fna', 66)
-#refseq_db = RefSeqAdapter('/lustre_cfc/qbic/reference_genomes/IRMA_references/RefSeq_human.protein.faa', 66, '/lustre_cfc/qbic/reference_genomes/IRMA_references/RefSeq_human.rna.fna', 66)
+refseq_db = RefSeqAdapter('/lustre_cfc/qbic/reference_genomes/IRMA_references/RefSeq_human.protein.faa', 66, '/lustre_cfc/qbic/reference_genomes/IRMA_references/RefSeq_human.rna.fna', 66)
 
 ids = mart_db.get_all_variant_ids(genes=list(genes))
 
