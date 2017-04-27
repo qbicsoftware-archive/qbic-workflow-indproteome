@@ -372,10 +372,6 @@ def __main__():
         transcripts = transcripts_germline + transcripts
 
     transcripts = list(set(transcripts))
-    transcriptProteinMap = get_protein_ids_for_transcripts(ID_SYSTEM_USED, transcripts, references[args.reference])
-
-    # get the alleles
-    alleles = FileReader.read_lines(args.alleles, in_type=Allele)
 
     # initialize MartsAdapter, GRCh37 or GRCh38 based
     ma = MartsAdapter(biomart=references[args.reference])
