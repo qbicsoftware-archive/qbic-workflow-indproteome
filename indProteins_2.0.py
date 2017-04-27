@@ -386,8 +386,6 @@ def __main__():
 
     with open("{}_individualized_protein_DB.fasta".format(args.identifier), 'w') as outfile:
         for p in proteins:
-            outfile.write('>{}\n'.format(p.transcript_id))
-            outfile.write('{}\n'.format(str(p)))
 
             variants = []
             for v in p.vars:
@@ -398,6 +396,9 @@ def __main__():
 
             cds = ','.join([y.cdsMutationSyntax for y in set(cf)])
             aas = ','.join([y.aaMutationSyntax for y in set(cf)])
+
+            outfile.write('>{}:{}\n'.format(p.transcript_id, aas))
+            outfile.write('{}\n'.format(str(p)))
 
     logging.info("Finished generation of protein sequences at " + str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
