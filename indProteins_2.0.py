@@ -323,14 +323,14 @@ def read_vcf(filename, pass_only=True):
 
 
 def __main__():
-	parser = argparse.ArgumentParser(description="""Individualized Proteins 2.0 \n Script for generation of protein sequences which contain provided variants.""", version=VERSION)
+    parser = argparse.ArgumentParser(description="""Individualized Proteins 2.0 \n Script for generation of protein sequences which contain provided variants.""", version=VERSION)
     parser.add_argument('-s', "--somatic_mutations", help='Somatic variants')
     parser.add_argument('-g', "--germline_mutations", help="Germline variants")
     parser.add_argument('-i', "--identifier", help="<Required> Predictions will be written with this name prefix", required=True)
     parser.add_argument('-r', "--reference", help="Reference, retrieved information will be based on this ensembl version", required=False, default='GRCh37', choices=['GRCh37', 'GRCh38'])
     parser.add_argument('-o', "--output_dir", help="All files written will be put in this directory")
 
-	args = parser.parse_args()
+    args = parser.parse_args()
 
     if len(sys.argv) <= 1:
         parser.print_help()
@@ -380,31 +380,30 @@ def __main__():
     # initialize MartsAdapter, GRCh37 or GRCh38 based
     ma = MartsAdapter(biomart=references[args.reference])
 
-	print(len(vl))
-	#generate transcripts containing variants, filter for unmutated sequences
-	transcripts = [g for g in generator.generate_transcripts_from_variants(vl, ma, ID_SYSTEM_USED) if g.vars]
+    #generate transcripts containing variants, filter for unmutated sequences
+    transcripts = [g for g in generator.generate_transcripts_from_variants(vl, ma, ID_SYSTEM_USED) if g.vars]
 
-	#generate proteins from transcripts, table='Standard', stop_symbol='*', to_stop=True, cds=False
-	proteins = generator.generate_proteins_from_transcripts(transcripts)
+    #generate proteins from transcripts, table='Standard', stop_symbol='*', to_stop=True, cds=False
+    proteins = generator.generate_proteins_from_transcripts(transcripts)
 
-	diff_sequences = {}
+    diff_sequences = {}
 
-	with open("{}_individualized_protein_DB.fasta".format(args.identifier), 'w') as outfile:
-		for p in proteins:
-			outfile.write('>{}\n'.format(p.transcript_id))
-			outfile.write('{}\n'.format(str(p)))
+    with open("{}_individualized_protein_DB.fasta".format(args.identifier), 'w') as outfile:
+        for p in proteins:
+            outfile.write('>{}\n'.format(p.transcript_id))
+            outfile.write('{}\n'.format(str(p)))
 
-			variants = []
-			for v in p.vars:
-				variants = variants + p.vars[v]
+            variants = []
+            for v in p.vars:
+                variants = variants + p.vars[v]
 
-			c = [x.coding.values() for x in variants]
-			cf = list(itertools.chain.from_iterable(c))
+            c = [x.coding.values() for x in variants]
+            cf = list(itertools.chain.from_iterable(c))
 
-			cds = ','.join([y.cdsMutationSyntax for y in set(cf)])
-			aas = ','.join([y.aaMutationSyntax for y in set(cf)])
+            cds = ','.join([y.cdsMutationSyntax for y in set(cf)])
+            aas = ','.join([y.aaMutationSyntax for y in set(cf)])
 
-	logging.info("Finished generation of protein sequences at " + str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    logging.info("Finished generation of protein sequences at " + str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
 
 if __name__ == "__main__": __main__()
