@@ -7,6 +7,7 @@ import logging
 import csv
 import re
 import vcf
+import subprocess
 import argparse
 import urllib2
 import itertools
@@ -328,6 +329,7 @@ def __main__():
     parser.add_argument('-g', "--germline_mutations", help="Germline variants")
     parser.add_argument('-i', "--identifier", help="<Required> Predictions will be written with this name prefix", required=True)
     parser.add_argument('-r', "--reference", help="Reference, retrieved information will be based on this ensembl version", required=False, default='GRCh37', choices=['GRCh37', 'GRCh38'])
+    parser.add_argument('-db', "--database", help="Proteome sequence reference database to be attached to individualized sequences", =required=True)
     parser.add_argument('-o', "--output_dir", help="All files written will be put in this directory")
 
     args = parser.parse_args()
@@ -383,8 +385,13 @@ def __main__():
     proteins = generator.generate_proteins_from_transcripts(transcripts)
 
     diff_sequences = {}
+    
+    out_ref = args.database.split('/')[-1].replace('.fasta','_{}_individualized_protein_DB.fasta'.format(args.identifier))    
 
-    with open("{}_individualized_protein_DB.fasta".format(args.identifier), 'w') as outfile:
+    cpRef = 'cp {f} {o}'.format(f=args.database,o=out_ref)
+    subprocess.call(cpRef.split())
+
+    with open(out_ref, 'a') as outfile:
         for p in proteins:
 
             variants = []
