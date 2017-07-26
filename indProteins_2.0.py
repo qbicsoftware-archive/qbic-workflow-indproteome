@@ -329,7 +329,7 @@ def __main__():
     parser.add_argument('-g', "--germline_mutations", help="Germline variants")
     parser.add_argument('-i', "--identifier", help="<Required> Predictions will be written with this name prefix", required=True)
     parser.add_argument('-r', "--reference", help="Reference, retrieved information will be based on this ensembl version", required=False, default='GRCh37', choices=['GRCh37', 'GRCh38'])
-    parser.add_argument('-db', "--database", help="Proteome sequence reference database to be attached to individualized sequences", =required=True)
+    parser.add_argument('-db', "--database", help="Proteome sequence reference database to be attached to individualized sequences", required=True)
     parser.add_argument('-o', "--output_dir", help="All files written will be put in this directory")
 
     args = parser.parse_args()
