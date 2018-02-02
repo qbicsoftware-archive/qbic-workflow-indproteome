@@ -122,9 +122,12 @@ def read_GSvar(filename, pass_only=True):
         if "coding_and_splicing_details" in line:
             mut_type = line.get("variant_details", '')
             annots = RE.findall(line["coding_and_splicing_details"])
-        else:
+        elif "variant_type" in line:
             mut_type = line.get("variant_type", '')
             annots = RE.findall(line["coding_and_splicing"])
+        else:
+            mut_type = line.get("variant_details", '')
+            annots = RE.findall(line["coding"])
         isyn = mut_type == "synonymous_variant"
 
         """
