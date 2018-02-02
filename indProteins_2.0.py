@@ -127,7 +127,14 @@ def read_GSvar(filename, pass_only=True):
             annots = RE.findall(line["coding_and_splicing"])
         else:
             mut_type = line.get("variant_details", '')
-            annots = RE.findall(line["coding"])
+            RE = re.compile("([\w.]+):([\w.]+):exon(\d+)\D*\d*:(c.\D*([_\d]+)\D*):(p.\D*(\d+)\w*)")
+            tuple_list = RE.findall(line["coding"])
+            annots = []
+            for t in tuple_list:
+                lis = list(t)
+                lis.insert(2, mut_type)
+                new_tuple = tuple(lis)
+                annots.append(new_tuple)
         isyn = mut_type == "synonymous_variant"
 
         """
@@ -148,7 +155,6 @@ def read_GSvar(filename, pass_only=True):
             vt = VariationType.INS
 
         coding = dict()
-
         for annot in annots:
             a_gene, nm_id, a_mut_type, exon, trans_coding, trans_pos, prot_coding, prot_start = annot
             if 'NM' in nm_id:
@@ -375,7 +381,6 @@ def __main__():
         # combine germline and somatic variants
         vl = vl + vl_normal
         transcripts = transcripts_germline + transcripts
-
     transcripts = list(set(transcripts))
 
     # initialize MartsAdapter, GRCh37 or GRCh38 based
@@ -383,10 +388,8 @@ def __main__():
 
     #generate transcripts containing variants, filter for unmutated sequences
     transcripts = [g for g in generator.generate_transcripts_from_variants(vl, ma, ID_SYSTEM_USED) if g.vars]
-
     #generate proteins from transcripts, table='Standard', stop_symbol='*', to_stop=True, cds=False
     proteins = generator.generate_proteins_from_transcripts(transcripts)
-
     diff_sequences = {}
     
     out_ref = args.database.split('/')[-1].replace('.fasta','_{}_individualized_protein_DB.fasta'.format(args.identifier))    
