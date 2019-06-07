@@ -157,7 +157,7 @@ def read_GSvar(filename, pass_only=True):
         coding = dict()
         for annot in annots:
             a_gene, nm_id, a_mut_type, exon, trans_coding, trans_pos, prot_coding, prot_start = annot
-            if 'NM' in nm_id:
+            if 'NM_' in nm_id:
                 ID_SYSTEM_USED = EIdentifierTypes.REFSEQ
             if "stop_gained" not in mut_type:
                 if not gene:
@@ -295,7 +295,7 @@ def read_vcf(filename, pass_only=True):
                     # there are no isoforms in biomart
                     transcript_id = transcript_id.split(".")[0]
 
-                    if 'NM' in transcript_id:
+                    if 'NM_' in transcript_id:
                         ID_SYSTEM_USED = EIdentifierTypes.REFSEQ
 
                     #take online coding variants into account, FRED2 cannot deal with stopgain variants right now
